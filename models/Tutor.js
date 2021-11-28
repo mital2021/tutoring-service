@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-// create our Post model
+// create our tutor model
 class Tutor extends Model {}
 
 // create fields/columns for Tutor model
-Post.init(
+Tutor.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,17 +12,25 @@ Post.init(
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
+    firstname: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    post_url: {
+    lastname: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isURL: true
-      }
     },
+
+    subject: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    hourlyrate: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
     user_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -35,7 +43,7 @@ Post.init(
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'post'
+    modelName: 'tutor'
   }
 );
 

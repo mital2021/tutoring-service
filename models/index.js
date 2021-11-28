@@ -13,12 +13,14 @@ User.hasMany(Tutor, {
   });
   
   User.belongsToMany(Tutor, {
+    through:"",
     foreignKey: 'user_id',
     onDelete: 'SET NULL'
   });
   
   Tutor.belongsToMany(User, {
-    foreignKey: 'post_id',
+  through:"",
+  foreignKey: 'tutor_id',
     onDelete: 'SET NULL'
   });
   
