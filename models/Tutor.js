@@ -1,7 +1,42 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-// create our tutor model
-class Tutor extends Model {}
+
+// create our Post model
+class Tutor extends Model {
+  static upvote(body, models) {
+    return models.Vote.create({
+      user_id: body.user_id,
+      tutor_id: body.tutor_id
+    }).then(() => {
+      return Tutor.findOne({
+        where: {
+          id: body.tutor_id
+        },
+        attributes: [
+          'id',
+          'firstname',
+          'lastname',
+          'subject',
+          'hourlyrate',
+          'created_at',
+          [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
+        ],
+        include: [
+          {
+            model: models.Comment,
+            attributes: ['id','tutor_id', 'user_id', 'created_at'],
+            include: {
+              model: models.User,
+              attributes: ['username']
+            }
+          }
+        ]
+      });
+    });
+  }
+}
+
+
 
 // create fields/columns for Tutor model
 Tutor.init(

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Tutor } = require('../../models');
+const { User, Tutor, Vote } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
@@ -23,7 +23,15 @@ router.get('/:id', (req, res) => {
       {
         model: Tutor,
         attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at']
+      },
+
+      {
+        model: Tutor,
+        attributes: ['firstname'],
+        through: Vote,
+        as: 'voted_tutors'
       }
+
     ]
   })
     .then(dbUserData => {

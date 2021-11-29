@@ -1,10 +1,14 @@
 const router = require('express').Router();
-const { Tutor, User } = require('../../models');
+const sequelize = require('../../config/connection');
+const { Tutor, User, Vote } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
+  console.log('======================');
   Tutor.findAll({
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at'],
+    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at',
+    [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
+  ],
     order: [['created_at', 'DESC']],
     include: [
       {
@@ -25,7 +29,9 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at'],
+    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at',
+    [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
+  ],
     include: [
       {
         model: User,
@@ -47,7 +53,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
+ 
   Tutor.create({
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -56,6 +62,16 @@ router.post('/', (req, res) => {
     user_id: req.body.user_id
   })
     .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/upvote', (req, res) => {
+  // custom static method created in models/Post.js
+  Tutor.upvote(req.body, { Vote, User })
+    .then(updatedVoteData => res.json(updatedVoteData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
