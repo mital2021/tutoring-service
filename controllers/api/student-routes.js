@@ -46,8 +46,6 @@ router.get('/:id', (req, res) => {
 });
 */
 router.post('/', (req, res) => {
-  // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
-  console.log(req.body)
   Student.create({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -60,30 +58,49 @@ router.post('/', (req, res) => {
       res.status(500).json(err);
     });
 });
-/*
+
 router.post('/login', (req, res) => {
-  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+  console.log(req.body)
   Student.findOne({
-    where: {
-      email: req.body.email
+    where:{
+        email: req.body.email
     }
-  }).then(dbUserData => {
-    if (!dbUserData) {
-      res.status(400).json({ message: 'No user with that email address!' });
+  }).then(dbStudentData =>{
+    if (!dbStudentData) {
+      res.status(400).json({message:'No user with that email address!'});
       return;
     }
 
-    const validPassword = dbUserData.checkPassword(req.body.password);
+    const validPassword = dbStudentData.checkPassword(req.body.password);
 
-    if (!validPassword) {
-      res.status(400).json({ message: 'Incorrect password!' });
+    if(!validPassword) {
+      res.status(400).json({ message:'Incorrect password!'});
       return;
     }
 
-    res.json({ user: dbUserData, message: 'You are now logged in!' });
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = dbStudentData.id;
+      req.session.first_name = dbStudentData.first_name;
+      req.session.last_name = dbStudentData.last_name;
+      req.session.loggedIn = true;
+      req.session.studentLoggedIn = true;
+      //req.session.studentLog = true;
+      res.json({ user: dbStudentData, message: 'You are now logged in!' }); 
+    });
   });
 });
 
+router.post('/logout', (req, res) => {
+  if(req.session.loggedIn) {
+    req.session.destroy(() =>{
+      res.status(204).end();
+    });
+  } else {
+    res.status(404).end();
+  }
+});
+/*
 router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 

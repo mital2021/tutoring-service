@@ -54,6 +54,10 @@ router.post('/', (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.post('/tutor-login', (req, res) => {
+
+})
 /*
 router.put('/upvote', (req, res) => {
   // custom static method created in models/Post.js

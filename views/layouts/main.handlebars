@@ -15,14 +15,21 @@
 
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/create-account">Create Account</a></li>
+            {{#if loggedIn}}
+              <li><a href="/login" id="logout">Log Out</a></li>
+            {{else}}
+              <li><a href="/login">Login</a></li>
+              <li><a href="/create-account">Create Account</a></li>
+            {{/if}}
           </ul>
         </div>
       </nav>
 
       {{{ body }}}
 
+    {{#if loggedIn}}
+      <script src="/javascript/logout.js"></script>
+    {{/if}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
 </html>
