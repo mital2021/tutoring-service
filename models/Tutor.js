@@ -18,13 +18,13 @@ class Tutor extends Model {
           'lastname',
           'subject',
           'hourlyrate',
-          'created_at',
+          
           [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
         ],
         include: [
           {
             model: models.Comment,
-            attributes: ['id','tutor_id', 'user_id', 'created_at'],
+            attributes: ['id','tutor_id', 'user_id'],
             include: {
               model: models.User,
               attributes: ['username']
