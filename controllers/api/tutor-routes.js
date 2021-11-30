@@ -1,29 +1,18 @@
 const router = require('express').Router();
 const sequelize = require('../../config/connection');
-const { Tutor, User, Vote } = require('../../models');
+const { Tutor, User } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
   console.log('======================');
-  Tutor.findAll({
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate',
-    [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
-  ],
-    order: [['created_at', 'DESC']],
-    include: [
-      {
-        model: User,
-        attributes: ['username']
-      }
-    ]
-  })
+  Tutor.findAll()
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-
+/*
 router.get('/:id', (req, res) => {
   Tutor.findOne({
     where: {
@@ -51,15 +40,13 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 router.post('/', (req, res) => {
- 
   Tutor.create({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    subject: req.body.subject,
-    hourlyrate: req.body.hourlyrate,
-    user_id: req.body.user_id
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email: req.body.email,
+    password: req.body.password
   })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -67,7 +54,7 @@ router.post('/', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+/*
 router.put('/upvote', (req, res) => {
   // custom static method created in models/Post.js
   Tutor.upvote(req.body, { Vote, User })
@@ -120,5 +107,5 @@ router.delete('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 module.exports = router;

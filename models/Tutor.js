@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
 // create our Post model
@@ -92,7 +93,7 @@ Tutor.init(
       },
       async beforeUpdate(updatedTutorData) {
         updatedTutorData.password = await bcrypt.hash(updatedTutorData.password, 10);
-        return updatedUserData
+        return updatedTutorData
       }
     },
     sequelize,
