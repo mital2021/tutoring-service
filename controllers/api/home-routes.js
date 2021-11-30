@@ -3,8 +3,8 @@ const router = require('express').Router();
 router.get('/', (req, res) => {
   res.render('homepage', {
     id: 1,
-    post_url: 'https://handlebarsjs.com/guide/',
-    title: 'Handlebars Docs',
+    post_url: 'https://tutoring-service.herokuapp.com',
+    title: 'ME Tutoring Service',
     created_at: new Date(),
     vote_count: 10,
     comments: [{}, {}],
