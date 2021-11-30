@@ -1,21 +1,21 @@
-const seedUsers = require('./user-seeds');
-const seedTutors = require('./tutor-seeds');
-const seedVotes = require('./vote-seeds');
+
+const seedUser = require('./User-seeds');
+const seedTutors = require('./Tutor-seeds');
+const seedVotes = require('./Vote-seeds');
 
 const sequelize = require('../config/connection');
 
 const seedAll = async () => {
   await sequelize.sync({ force: true });
-  console.log('--------------');
-  await seedUsers();
-  console.log('--------------');
+  console.log('\n----- DATABASE SYNCED -----\n');
+  await seedUser();
+  console.log('\n----- USER SEEDED -----\n');
 
-  await seedTutors().catch((error ) => {console.error(error)});
-  console.log('--------------');
+  await seedTutors();
+  console.log('\n----- TUTORS SEEDED -----\n');
 
   await seedVotes();
-  console.log('--------------');
-
+  console.log('\n----- VOTES SEEDED -----\n');
 
   process.exit(0);
 };

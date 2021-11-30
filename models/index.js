@@ -47,4 +47,4 @@ User.hasMany(Tutor, {
   });
 
   
-  module.exports = { User, Tutor};
+  module.exports = { User, Tutor,Vote};
