@@ -16,6 +16,9 @@
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
             {{#if loggedIn}}
+              {{#if tutorLoggedIn}}
+                <li><a href="/dashboard" id="dashboard">Dashboard</a></li>
+              {{/if}}
               <li><a href="/login" id="logout">Log Out</a></li>
             {{else}}
               <li><a href="/login">Login</a></li>

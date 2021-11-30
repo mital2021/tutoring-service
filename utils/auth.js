@@ -5,5 +5,21 @@ const withAuth = (req, res, next) => {
         next();
     }
 };
+
+const withDash = (req, res, next) => {
+    if (!req.session.tutorLoggedIn) {
+        res.redirect('/')
+    } else {
+        next();
+    }
+}
+
+const withLoggedIn = (req, res, next) => {
+    if (req.session.loggedIn) {
+        res.redirect('/')
+    } else {
+        next();
+    }
+}
   
-module.exports = withAuth;
+module.exports = { withAuth, withDash, withLoggedIn };

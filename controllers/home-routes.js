@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Student, Tutor, Review } = require('../Models')
-const withAuth = require('../utils/auth');
+const { withAuth, withDash, withLoggedIn } = require('../utils/auth');
 
 router.get('/', withAuth, (req, res) => {
   Tutor.findAll().then(dbTutorData => {
@@ -24,15 +24,15 @@ router.get('/', withAuth, (req, res) => {
   })
 })
 
-router.get('/login', (req, res) => {
+router.get('/login', withLoggedIn, (req, res) => {
   res.render('login');
 });
 
-router.get('/create-account', (req, res) => {
+router.get('/create-account', withLoggedIn, (req, res) => {
   res.render('create-account');
 });
 
-router.get('/profile/:id', (req, res) => {
+router.get('/profile/:id', withAuth, (req, res) => {
   Tutor.findOne({
     where: {
       id: req.params.id
@@ -55,5 +55,27 @@ router.get('/profile/:id', (req, res) => {
     });
   });
 });
+
+router.get('/dashboard', withAuth, withDash, (req, res) => {
+  Tutor.findOne({
+    where: {
+      id: req.session.user_id
+    }
+  }).then(dbTutorData => {
+    if(!dbTutorData) {
+      res.status(404).json({message: 'No tutor found with this id'});
+      return;
+    }
+
+    const tutor = dbTutorData.get({plain: true});
+
+    res.render('dashboard', {
+      tutor,
+      loggedIn: req.session.loggedIn,
+      studentLoggedIn: req.session.studentLoggedIn,
+      tutorLoggedIn: req.session.tutorLoggedIn
+    })
+  })
+})
 
 module.exports = router;
