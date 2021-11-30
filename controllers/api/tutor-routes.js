@@ -55,8 +55,36 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/tutor-login', (req, res) => {
+router.post('/login', (req, res) => {
+  Tutor.findOne({
+    where:{
+        email: req.body.email
+    }
+  }).then(dbTutorData =>{
+    if (!dbTutorData) {
+      res.status(400).json({message:'No tutor with that email address!'});
+      return;
+    }
 
+    //console.log(dbTutorData.checkPassword(req.body.password))
+    //const validPassword = dbTutorData.checkPassword(req.body.password);
+
+    // if(!validPassword) {
+    //   res.status(400).json({ message:'Incorrect password!'});
+    //   return;
+    // }
+
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = dbTutorData.id;
+      req.session.first_name = dbTutorData.first_name;
+      req.session.last_name = dbTutorData.last_name;
+      req.session.loggedIn = true;
+      req.session.tutorLoggedIn = true;
+
+      res.json({ user: dbTutorData, message: 'You are now logged in!' }); 
+    });
+  });
 })
 /*
 router.put('/upvote', (req, res) => {

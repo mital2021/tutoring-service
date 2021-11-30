@@ -30,7 +30,7 @@ async function tutorFormHandler(event) {
     const password =document.querySelector('#tutor-password').value.trim();
 
     if(email && password) {
-        const response = await fetch('/api/tutor-login',{
+        const response = await fetch('/api/tutors/login',{
             method:'post',
             body:JSON.stringify({
                 email,
@@ -41,7 +41,7 @@ async function tutorFormHandler(event) {
 
         if (response.ok) {
             document.location.replace('/');
-        }else{
+        } else {
             alert(response.statusText);
         }
     }

@@ -60,14 +60,13 @@ router.post('/', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  console.log(req.body)
   Student.findOne({
     where:{
         email: req.body.email
     }
   }).then(dbStudentData =>{
     if (!dbStudentData) {
-      res.status(400).json({message:'No user with that email address!'});
+      res.status(400).json({message:'No student with that email address!'});
       return;
     }
 
@@ -85,21 +84,12 @@ router.post('/login', (req, res) => {
       req.session.last_name = dbStudentData.last_name;
       req.session.loggedIn = true;
       req.session.studentLoggedIn = true;
-      //req.session.studentLog = true;
+ 
       res.json({ user: dbStudentData, message: 'You are now logged in!' }); 
     });
   });
 });
 
-router.post('/logout', (req, res) => {
-  if(req.session.loggedIn) {
-    req.session.destroy(() =>{
-      res.status(204).end();
-    });
-  } else {
-    res.status(404).end();
-  }
-});
 /*
 router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
