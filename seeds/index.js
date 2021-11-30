@@ -10,7 +10,7 @@ const seedAll = async () => {
   await seedUsers();
   console.log('--------------');
 
-  await seedTutors();
+  await seedTutors().catch((error ) => {console.error(error)});
   console.log('--------------');
 
   await seedVotes();

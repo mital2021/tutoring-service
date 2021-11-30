@@ -6,7 +6,7 @@ const { Tutor, User, Vote } = require('../../models');
 router.get('/', (req, res) => {
   console.log('======================');
   Tutor.findAll({
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at',
+    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate',
     [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
   ],
     order: [['created_at', 'DESC']],
@@ -29,7 +29,7 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate', 'created_at',
+    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate',
     [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
   ],
     include: [
