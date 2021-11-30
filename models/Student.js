@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
 // create our User model
-class User extends Model {
+class Student extends Model {
   // set up method to run on instance data (per user) to check password
   checkPassword(loginPw) {
     return bcrypt.compareSync(loginPw, this.password);
@@ -11,7 +11,7 @@ class User extends Model {
 }
 
 // create fields/columns for User model
-User.init(
+Student.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -19,7 +19,11 @@ User.init(
       primaryKey: true,
       autoIncrement: true
     },
-    username: {
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    last_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -41,23 +45,22 @@ User.init(
   },
   {
     hooks: {
-      // set up beforeCreate lifecycle "hook" functionality
-      async beforeCreate(newUserData) {
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        return newUserData;
+      async beforeCreate(newStudentData) {
+        newStudentData.password = await bcrypt.hash(newStudentData.password, 10);
+        return newStudentData;
       },
 
-      async beforeUpdate(updatedUserData) {
-        updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
-        return updatedUserData;
+      async beforeUpdate(updatedStudentData) {
+        updatedStudentData.password = await bcrypt.hash(updatedStudentData.password, 10);
+        return updatedStudentData;
       }
     },
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'user'
+    modelName: 'student'
   }
 );
 
-module.exports = User;
+module.exports = Student;

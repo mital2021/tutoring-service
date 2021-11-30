@@ -1,20 +1,18 @@
 const router = require('express').Router();
-const { User, Tutor, Vote } = require('../../models');
+const { Student , Tutor } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
-  User.findAll({
-    attributes: { exclude: ['password'] }
-  })
+  Student.findAll()
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-
+/*
 router.get('/:id', (req, res) => {
-  User.findOne({
+  Student.findOne({
     attributes: { exclude: ['password'] },
     where: {
       id: req.params.id
@@ -46,24 +44,26 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 router.post('/', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
-  User.create({
-    username: req.body.username,
+  console.log(req.body)
+  Student.create({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password
   })
-    .then(dbUserData => res.json(dbUserData))
+    .then(dbStudentData => res.json(dbStudentData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-
+/*
 router.post('/login', (req, res) => {
   // expects {email: 'lernantino@gmail.com', password: 'password1234'}
-  User.findOne({
+  Student.findOne({
     where: {
       email: req.body.email
     }
@@ -88,7 +88,7 @@ router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
   // pass in req.body instead to only update what's passed through
-  User.update(req.body, {
+  Student.update(req.body, {
     individualHooks: true,
     where: {
       id: req.params.id
@@ -108,7 +108,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  User.destroy({
+  Student.destroy({
     where: {
       id: req.params.id
     }
@@ -125,5 +125,5 @@ router.delete('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 module.exports = router;
