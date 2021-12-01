@@ -1,12 +1,19 @@
 const router = require('express').Router();
 
-const userRoutes = require('./user-routes');
+const studentRoutes = require('./student-routes');
 const tutorRoutes = require('./tutor-routes');
-const homeRoutes = require('./home-routes.js');
-const controllers = require('./controllers/'); 
 
-router.use('/', homeRoutes);
-router.use('/users', userRoutes);
+router.use('/students', studentRoutes);
 router.use('/tutors', tutorRoutes);
+
+router.post('/logout', (req, res) => {
+    if(req.session.loggedIn) {
+      req.session.destroy(() =>{
+        res.status(204).end();
+      });
+    } else {
+      res.status(404).end();
+    }
+  });
 
 module.exports = router;

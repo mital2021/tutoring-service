@@ -1,29 +1,18 @@
 const router = require('express').Router();
 const sequelize = require('../../config/connection');
-const { Tutor, User, Vote } = require('../../models');
+const { Tutor, User } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
   console.log('======================');
-  Tutor.findAll({
-    attributes: ['id', 'firstname', 'lastname','subject','hourlyrate',
-    [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE tutor.id = vote.tutor_id)'), 'vote_count']
-  ],
-    order: [['created_at', 'DESC']],
-    include: [
-      {
-        model: User,
-        attributes: ['username']
-      }
-    ]
-  })
+  Tutor.findAll()
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-
+/*
 router.get('/:id', (req, res) => {
   Tutor.findOne({
     where: {
@@ -51,15 +40,13 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 router.post('/', (req, res) => {
- 
   Tutor.create({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    subject: req.body.subject,
-    hourlyrate: req.body.hourlyrate,
-    user_id: req.body.user_id
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email: req.body.email,
+    password: req.body.password
   })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -68,6 +55,38 @@ router.post('/', (req, res) => {
     });
 });
 
+router.post('/login', (req, res) => {
+  Tutor.findOne({
+    where:{
+        email: req.body.email
+    }
+  }).then(dbTutorData =>{
+    if (!dbTutorData) {
+      res.status(400).json({message:'No tutor with that email address!'});
+      return;
+    }
+
+    //console.log(dbTutorData.checkPassword(req.body.password))
+    //const validPassword = dbTutorData.checkPassword(req.body.password);
+
+    // if(!validPassword) {
+    //   res.status(400).json({ message:'Incorrect password!'});
+    //   return;
+    // }
+
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = dbTutorData.id;
+      req.session.first_name = dbTutorData.first_name;
+      req.session.last_name = dbTutorData.last_name;
+      req.session.loggedIn = true;
+      req.session.tutorLoggedIn = true;
+
+      res.json({ user: dbTutorData, message: 'You are now logged in!' }); 
+    });
+  });
+})
+/*
 router.put('/upvote', (req, res) => {
   // custom static method created in models/Post.js
   Tutor.upvote(req.body, { Vote, User })
@@ -120,5 +139,5 @@ router.delete('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 module.exports = router;

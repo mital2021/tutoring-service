@@ -1,20 +1,18 @@
 const router = require('express').Router();
-const { User, Tutor, Vote } = require('../../models');
+const { Student , Tutor } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
-  User.findAll({
-    attributes: { exclude: ['password'] }
-  })
+  Student.findAll()
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-
+/*
 router.get('/:id', (req, res) => {
-  User.findOne({
+  Student.findOne({
     attributes: { exclude: ['password'] },
     where: {
       id: req.params.id
@@ -46,15 +44,15 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 router.post('/', (req, res) => {
-  // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
-  User.create({
-    username: req.body.username,
+  Student.create({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password
   })
-    .then(dbUserData => res.json(dbUserData))
+    .then(dbStudentData => res.json(dbStudentData))
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
@@ -62,33 +60,42 @@ router.post('/', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
-  User.findOne({
-    where: {
-      email: req.body.email
+  Student.findOne({
+    where:{
+        email: req.body.email
     }
-  }).then(dbUserData => {
-    if (!dbUserData) {
-      res.status(400).json({ message: 'No user with that email address!' });
+  }).then(dbStudentData =>{
+    if (!dbStudentData) {
+      res.status(400).json({message:'No student with that email address!'});
       return;
     }
 
-    const validPassword = dbUserData.checkPassword(req.body.password);
+    const validPassword = dbStudentData.checkPassword(req.body.password);
 
-    if (!validPassword) {
-      res.status(400).json({ message: 'Incorrect password!' });
+    if(!validPassword) {
+      res.status(400).json({ message:'Incorrect password!'});
       return;
     }
 
-    res.json({ user: dbUserData, message: 'You are now logged in!' });
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = dbStudentData.id;
+      req.session.first_name = dbStudentData.first_name;
+      req.session.last_name = dbStudentData.last_name;
+      req.session.loggedIn = true;
+      req.session.studentLoggedIn = true;
+ 
+      res.json({ user: dbStudentData, message: 'You are now logged in!' }); 
+    });
   });
 });
 
+/*
 router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
   // pass in req.body instead to only update what's passed through
-  User.update(req.body, {
+  Student.update(req.body, {
     individualHooks: true,
     where: {
       id: req.params.id
@@ -108,7 +115,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  User.destroy({
+  Student.destroy({
     where: {
       id: req.params.id
     }
@@ -125,5 +132,5 @@ router.delete('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+*/
 module.exports = router;
