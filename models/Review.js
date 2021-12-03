@@ -16,11 +16,9 @@ Review.init(
     },
     emoji: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     stars: {
         type: DataTypes.INTEGER,
-        allowNull: false
     },
     student_id: {
       type: DataTypes.INTEGER,

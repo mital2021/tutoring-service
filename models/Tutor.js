@@ -72,13 +72,13 @@ Tutor.init(
     subject: {
       type: DataTypes.STRING
     },
-    hourlyrate: {
+    hourly_rate: {
       type: DataTypes.INTEGER
     },
     description: {
       type: DataTypes.STRING
     },
-    interests: {
+    interest: {
       type: DataTypes.STRING
     },
     career: {

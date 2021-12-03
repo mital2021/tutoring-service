@@ -3,7 +3,20 @@ const { Student, Tutor, Review } = require('../Models')
 const { withAuth, withDash, withLoggedIn } = require('../utils/auth');
 
 router.get('/', withAuth, (req, res) => {
-  Tutor.findAll().then(dbTutorData => {
+  Tutor.findAll({
+    include: [
+      {
+        model: Review,
+        attributes: ['id', 'review', 'emoji', 'stars'],
+        include: [
+          {
+            model: Student,
+            attributes: ['first_name', 'last_name']
+          }
+        ]
+      }
+    ]
+   }).then(dbTutorData => {
     if(!dbTutorData) {
       res.status(404).json({message:'No user found with this id'})
       return;
@@ -36,7 +49,19 @@ router.get('/profile/:id', withAuth, (req, res) => {
   Tutor.findOne({
     where: {
       id: req.params.id
-    }
+    },
+    include: [
+      {
+        model: Review,
+        attributes: ['id', 'review', 'emoji', 'stars'],
+        include: [
+          {
+            model: Student,
+            attributes: ['first_name', 'last_name']
+          }
+        ]
+      }
+    ]
   }).then(dbTutorData => {
     if(!dbTutorData) {
       res.status(404).json({message:'No tutor found with this id.'});
