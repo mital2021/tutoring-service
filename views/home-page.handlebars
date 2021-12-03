@@ -8,11 +8,14 @@
                         <div class="card blue-grey darken-1">
                             <div class="card-content white-text">
                                 <span class="card-title">{{tutor.first_name}} {{tutor.last_name}}</span>
-                                <p>Here is where the wages and subject goes.</p>
+                                <p>Subject: {{tutor.subject}}</p>
+                                <p>Hourly Rate: ${{tutor.hourly_rate}}</p>
+                                <p>email: {{tutor.email}}</p>
                             </div>
 
                             <div class="card-action">
-                                <a href="/profile/{{tutor.id}}">View Profile</a>
+                                <a class="left" href="/profile/{{tutor.id}}">View Profile</a>
+                                <a class="right">({{tutor.reviews.length}}) Review(s)</a>
                             </div>
                         </div>
                     </div>

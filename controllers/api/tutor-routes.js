@@ -1,11 +1,24 @@
 const router = require('express').Router();
 const sequelize = require('../../config/connection');
-const { Tutor, User } = require('../../models');
+const { Student , Tutor , Review } = require('../../models');
 
 // get all users
 router.get('/', (req, res) => {
   console.log('======================');
-  Tutor.findAll()
+  Tutor.findAll({
+    include: [
+      {
+        model: Review,
+        attributes: ['id', 'review', 'emoji', 'stars'],
+        include: [
+          {
+            model: Student,
+            attributes: ['first_name', 'last_name']
+          }
+        ]
+      }
+    ]
+   })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
       console.log(err);
@@ -84,6 +97,34 @@ router.post('/login', (req, res) => {
 
       res.json({ user: dbTutorData, message: 'You are now logged in!' }); 
     });
+  });
+})
+
+router.put('/:id', (req, res) => {
+  Tutor.update(
+    {
+      subject: req.body.subject,
+      hourly_rate: req.body.hourly_rate,
+      description: req.body.description,
+      interest: req.body.interest,
+      career: req.body.career
+    },
+    {
+      where: {
+      id: req.session.user_id
+      }
+    }
+  )
+  .then((dbTutorData) => {
+    if (!dbTutorData) {
+      res.status(404).json({ message: "No Tutor found with this id" });
+      return;
+    }
+    res.json(dbTutorData);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 })
 /*
