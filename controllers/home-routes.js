@@ -103,4 +103,8 @@ router.get('/dashboard', withAuth, withDash, (req, res) => {
   })
 })
 
+router.get('/introduction', (req, res) => {
+  res.render('introduction');
+})
+
 module.exports = router;

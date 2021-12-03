@@ -1,5 +1,6 @@
 <div class="container row">
-    <div class="col s6">
+    <div class="col s6 dashboard-section">
+        <div class="left"
         <div class="row">
             <p id="id" style="display: none;">{{tutor.id}}</p>
             <h2>{{tutor.first_name}} {{tutor.last_name}}</h2>
@@ -9,27 +10,27 @@
             <form class="update-form">
                 <div>
                     <label>Enter your Subject:</label>
-                    <input id="subject" class="materialize-textarea">{{tutor.subject}}</input>
+                    <input id="subject" class="white-text" class="materialize-textarea">{{tutor.subject}}</input>
                 </div>
 
                 <div>
                     <label>Enter your Hourly Rate</label>
-                    <input id="hourly_rate" class="materialize-textarea">{{tutor.hourly_rate}}</input>
+                    <input id="hourly_rate" class="white-text" class="materialize-textarea">{{tutor.hourly_rate}}</input>
                 </div>
 
                 <div>
                     <label>Enter your Description</label>
-                    <textarea id="description" class="materialize-textarea">{{tutor.description}}</textarea>
+                    <textarea id="description" class="white-text" class="materialize-textarea">{{tutor.description}}</textarea>
                 </div>
 
                 <div>
                     <label>Enter your Interests</label>
-                    <textarea id="interest" class="materialize-textarea">{{tutor.interest}}</textarea>
+                    <textarea id="interest" class="white-text" class="materialize-textarea">{{tutor.interest}}</textarea>
                 </div>
 
                 <div>
                     <label>Enter your Career</label>
-                    <textarea id="career" class="materialize-textarea">{{tutor.career}}</textarea>
+                    <textarea id="career" class="white-text" class="materialize-textarea">{{tutor.career}}</textarea>
                 </div> 
 
                 <div>
@@ -38,11 +39,10 @@
             </form>
         </div>
     </div>
-    <div class="col s6">
+    <div class="col s6 review-section">
         <div class="row">
             <h2>Reviews:</h2>
         </div>
     </div>
 </div> 
-
 <script src="/javascript/update-profile.js"></script>
