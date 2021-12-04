@@ -8,7 +8,7 @@ const reviewRoutes = require('./review-routes');
 
 router.use('/students', studentRoutes);
 router.use('/tutors', tutorRoutes);
-router.use('/review',reviewRoutes);
+router.use('/reviews',reviewRoutes);
 
 router.post('/logout', (req, res) => {
     if(req.session.loggedIn) {
